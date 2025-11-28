@@ -1,0 +1,309 @@
+{
+  "tech_stack": [
+    "Node.js",
+    "Express",
+    "React",
+    "Vite",
+    "Tailwind CSS",
+    "Clerk",
+    "Cloudinary",
+    "Hugging Face Inference API",
+    "Multer"
+  ],
+  "features": [
+    {
+      "name": "AI Content Detection",
+      "description": "Detects whether submitted prose is likely AI-generated and returns readability insights.",
+      "files": [
+        "backend/src/routes/aiDetectionRoutes.js",
+        "backend/src/Controllers/aiDetectionController.js",
+        "backend/src/utils/huggingface.js"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "info": {
+          "title": "AI Content Detection API",
+          "version": "1.0.0"
+        },
+        "paths": {
+          "/api/ai/detect": {
+            "post": {
+              "summary": "Analyze text to determine AI vs human probabilities",
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "required": ["text"],
+                      "properties": {
+                        "text": {
+                          "type": "string",
+                          "description": "Text (10-5000 words) to evaluate"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "description": "Detection metrics returned",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "statusCode": { "type": "integer" },
+                          "message": { "type": "string" },
+                          "data": {
+                            "type": "object",
+                            "properties": {
+                              "detection": {
+                                "type": "object",
+                                "properties": {
+                                  "aiProbability": { "type": "number" },
+                                  "humanProbability": { "type": "number" },
+                                  "verdict": { "type": "string" },
+                                  "confidence": { "type": "string" }
+                                }
+                              },
+                              "analysis": { "type": "object" },
+                              "indicators": { "type": "array", "items": { "type": "string" } },
+                              "metadata": { "type": "object" }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "400": { "description": "Validation error" }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Text Generation Suite",
+      "description": "Generates articles, blog titles, inspirational quotes, and rewrites via Hugging Face models.",
+      "files": [
+        "backend/src/routes/textGenerationRoutes.js",
+        "backend/src/Controllers/textGenerationController.js",
+        "backend/src/utils/huggingface.js"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "info": { "title": "Text Generation APIs", "version": "1.0.0" },
+        "paths": {
+          "/api/generate/article": {
+            "post": {
+              "summary": "Create long-form article",
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "required": ["topic"],
+                      "properties": {
+                        "topic": { "type": "string" },
+                        "keywords": { "type": "string" },
+                        "wordCount": { "type": "integer" }
+                      }
+                    }
+                  }
+                }
+              },
+              "responses": { "200": { "description": "Article and metadata" }, "400": { "description": "Validation failure" } }
+            }
+          },
+          "/api/generate/titles": {
+            "post": {
+              "summary": "Generate SEO-friendly titles",
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "required": ["topic"],
+                      "properties": {
+                        "topic": { "type": "string" },
+                        "tone": { "type": "string" },
+                        "count": { "type": "integer" }
+                      }
+                    }
+                  }
+                }
+              },
+              "responses": { "200": { "description": "List of generated titles" } }
+            }
+          },
+          "/api/generate/quotes": {
+            "post": {
+              "summary": "Create inspirational quotes or taglines",
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "required": ["theme"],
+                      "properties": {
+                        "theme": { "type": "string" },
+                        "type": { "type": "string", "enum": ["quote", "tagline"] },
+                        "count": { "type": "integer" }
+                      }
+                    }
+                  }
+                }
+              },
+              "responses": { "200": { "description": "Generated quotes" } }
+            }
+          },
+          "/api/generate/rewrite": {
+            "post": {
+              "summary": "Rewrite supplied text in various tones",
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "required": ["text"],
+                      "properties": {
+                        "text": { "type": "string" },
+                        "mode": { "type": "string", "enum": ["standard", "formal", "casual", "creative", "concise"] }
+                      }
+                    }
+                  }
+                }
+              },
+              "responses": { "200": { "description": "Rewritten output" } }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Intelligent Classification",
+      "description": "Classifies support tickets, analyzes resumes with file uploads, and scores sentiment.",
+      "files": [
+        "backend/src/routes/classificationRoutes.js",
+        "backend/src/Controllers/classificationController.js",
+        "backend/src/middlewares/multermiddleware.js",
+        "backend/src/utils/textExtractor.js"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "info": { "title": "Classification APIs", "version": "1.0.0" },
+        "paths": {
+          "/api/classify/ticket": {
+            "post": {
+              "summary": "Auto-triage support tickets",
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "required": ["text"],
+                      "properties": {
+                        "text": { "type": "string" },
+                        "email": { "type": "string", "format": "email" },
+                        "userId": { "type": "string" }
+                      }
+                    }
+                  }
+                }
+              },
+              "responses": { "200": { "description": "Structured classification" }, "400": { "description": "Invalid payload" } }
+            }
+          },
+          "/api/classify/resume": {
+            "post": {
+              "summary": "Analyze uploaded resume against a target job",
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "multipart/form-data": {
+                    "schema": {
+                      "type": "object",
+                      "required": ["file", "jobTitle"],
+                      "properties": {
+                        "file": { "type": "string", "format": "binary" },
+                        "jobTitle": { "type": "string" }
+                      }
+                    }
+                  }
+                }
+              },
+              "responses": { "200": { "description": "Resume insight JSON" }, "400": { "description": "Validation or parsing failure" } }
+            }
+          },
+          "/api/classify/sentiment": {
+            "post": {
+              "summary": "Score sentiment over provided text",
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "required": ["text"],
+                      "properties": { "text": { "type": "string" } }
+                    }
+                  }
+                }
+              },
+              "responses": { "200": { "description": "Sentiment label and confidence" } }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Document QA Assistant",
+      "description": "Uploads a document, extracts text, and answers user questions strictly grounded in the file.",
+      "files": [
+        "backend/src/routes/assistantRoutes.js",
+        "backend/src/Controllers/assistantController.js",
+        "backend/src/utils/textExtractor.js",
+        "backend/src/utils/cloudinary.js"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "info": { "title": "Document Assistant API", "version": "1.0.0" },
+        "paths": {
+          "/api/assistant/respond": {
+            "post": {
+              "summary": "Answer questions about an uploaded document",
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "multipart/form-data": {
+                    "schema": {
+                      "type": "object",
+                      "required": ["file", "user_input"],
+                      "properties": {
+                        "file": { "type": "string", "format": "binary" },
+                        "user_input": { "type": "string" }
+                      }
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": { "description": "AI-generated answer with file metadata" },
+                "400": { "description": "Missing input or unreadable file" },
+                "500": { "description": "AI or storage failure" }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

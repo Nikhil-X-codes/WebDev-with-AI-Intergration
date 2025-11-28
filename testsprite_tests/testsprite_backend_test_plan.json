@@ -1,0 +1,47 @@
+[
+  {
+    "id": "TC001",
+    "title": "ai content detection post request with valid text",
+    "description": "Test the /api/ai/detect endpoint with valid text input to verify it returns AI vs human probability scores, verdict, confidence, and readability indicators correctly."
+  },
+  {
+    "id": "TC002",
+    "title": "article generation with required topic parameter",
+    "description": "Test the /api/generate/article endpoint by providing a valid topic and optional keywords and wordCount to ensure it generates a long-form article matching the requested parameters."
+  },
+  {
+    "id": "TC003",
+    "title": "seo friendly titles generation with topic and tone",
+    "description": "Test the /api/generate/titles endpoint with a valid topic and tone to verify it returns a list of SEO-friendly titles as per the requested count."
+  },
+  {
+    "id": "TC004",
+    "title": "inspirational quotes generation with theme and type",
+    "description": "Test the /api/generate/quotes endpoint by submitting a theme and type (quote or tagline) to confirm it generates the correct number of inspirational quotes or taglines."
+  },
+  {
+    "id": "TC005",
+    "title": "text rewrite with various tone modes",
+    "description": "Test the /api/generate/rewrite endpoint by providing text and different mode values (standard, formal, casual, creative, concise) to verify the text is rewritten accordingly."
+  },
+  {
+    "id": "TC006",
+    "title": "support ticket classification with text and optional user info",
+    "description": "Test the /api/classify/ticket endpoint by submitting support ticket text along with optional email and userId to ensure it returns structured classification results."
+  },
+  {
+    "id": "TC007",
+    "title": "resume analysis with file upload and job title",
+    "description": "Test the /api/classify/resume endpoint by uploading a resume file and providing a job title to verify it returns detailed resume insights and handles file parsing correctly."
+  },
+  {
+    "id": "TC008",
+    "title": "sentiment scoring with text input",
+    "description": "Test the /api/classify/sentiment endpoint by submitting text to confirm it returns sentiment label and confidence score accurately."
+  },
+  {
+    "id": "TC009",
+    "title": "document qa assistant with file upload and user question",
+    "description": "Test the /api/assistant/respond endpoint by uploading a document file and submitting a user question to verify it returns AI-generated answers strictly based on the document content."
+  }
+]
