@@ -46,11 +46,6 @@ export const uploadToCloudinary = async (fileBuffer, folder = 'uploads', resourc
           console.error('[ERROR] Cloudinary upload error:', error);
           reject(error);
         } else {
-          
-            public_id: result.public_id,
-            secure_url: result.secure_url,
-            size: result.bytes
-          });
           resolve(result);
         }
       }
@@ -88,8 +83,6 @@ export const deleteFromCloudinary = async (publicId, resourceType = 'raw') => {
     const result = await cloudinary.uploader.destroy(publicId, {
       resource_type: resourceType
     });
-
-    
     return result;
   } catch (error) {
     console.error('[ERROR] Cloudinary delete error:', error);

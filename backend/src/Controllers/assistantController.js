@@ -38,12 +38,6 @@ export async function respondAssistant(req, res) {
       return res.status(400).json({ error: validation.error });
     }
 
-    
-      name: file.originalname,
-      size: file.size,
-      type: file.mimetype
-    });
-
     const shouldUploadToCloudinary =
       isCloudinaryConfigured() &&
       (process.env.SAVE_UPLOADS_TO_CLOUDINARY || '').toLowerCase() === 'true';
@@ -57,18 +51,12 @@ export async function respondAssistant(req, res) {
           'documents',
           'raw'
         );
-        
-          public_id: cloudinaryResult.public_id,
-          url: cloudinaryResult.secure_url
-        });
       } catch (error) {
         console.error('[ERROR] Cloudinary upload failed:', error);
         return res.status(500).json({ 
           error: 'Failed to upload file to cloud storage' 
         });
       }
-    } else {
-      
     }
 
     // Extract text from file
@@ -82,7 +70,6 @@ export async function respondAssistant(req, res) {
         });
       }
 
-      
     } catch (error) {
       console.error('[ERROR] Text extraction failed:', error);
       return res.status(400).json({
