@@ -23,11 +23,19 @@ app.get('/health', (req, res) => {
   });
 });
 
+app.head('/health', (req, res) => {
+  res.status(200).end();
+});
+
 app.get('/', (req, res) => {
   res.status(200).json({
     status: 'OK',
     message: 'Backend API is running'
   });
+});
+
+app.head('/', (req, res) => {
+  res.status(200).end();
 });
 
 const clerkKey = process.env.CLERK_SECRET_KEY?.trim();
