@@ -15,6 +15,21 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'OK',
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString()
+  });
+});
+
+app.get('/', (req, res) => {
+  res.status(200).json({
+    status: 'OK',
+    message: 'Backend API is running'
+  });
+});
+
 const clerkKey = process.env.CLERK_SECRET_KEY?.trim();
 if (clerkKey && clerkKey !== 'dummy') {
   app.use(clerkMiddleware());
